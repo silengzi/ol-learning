@@ -1,4 +1,4 @@
-import "./Accessible Map.css"
+import "./index.css"
 
 document.querySelector('#app').innerHTML = `
   <a class="skiplink" href="#map">Go to map</a>
