@@ -1,4 +1,6 @@
 import "./index.css"
+import getDescription from "./description.js"
+import getCode from "./code.js"
 
 document.querySelector('#app').innerHTML = `
   <a class="skiplink" href="#map">Go to map</a>
@@ -6,6 +8,8 @@ document.querySelector('#app').innerHTML = `
   <button id="zoom-out">Zoom out</button>
   <button id="zoom-in">Zoom in</button>
 `
+
+// ***
 
 import Map from 'ol/Map.js';
 import OSM from 'ol/source/OSM.js';
@@ -36,3 +40,8 @@ document.getElementById('zoom-in').onclick = function () {
   const zoom = view.getZoom();
   view.setZoom(zoom + 1);
 };
+
+// ***
+
+getDescription()
+getCode()
