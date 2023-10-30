@@ -84,10 +84,9 @@ const package_str = `
 export default function getCode() {
   let text = `
 <pre class="language-markup"><code class="language-markup">\`${html_str}\`</code></pre>
-<pre><code class="language-css">${css_str}</code>
-<pre><code class="language-js">${js_str}</code>
-<pre><code class="language-json">${package_str}</code>
-</pre>
+<pre><code class="language-css">${css_str}</code></pre>
+<pre><code class="language-js">${js_str}</code></pre>
+<pre><code class="language-json">${package_str}</code></pre>
   `
   document.querySelector('#app').insertAdjacentHTML("beforeend", text)
 }
