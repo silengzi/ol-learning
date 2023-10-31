@@ -1,0 +1,18 @@
+.h4, h4 {
+  font-size: 1.5rem;
+}
+.h5, h5 {
+  font-size: 1.25rem;
+}
+
+#app {
+  padding: 0 4px;
+}
+
+div.code-toolbar>.toolbar button:hover, div.code-toolbar>.toolbar button:focus {
+  cursor: pointer;
+}
+
+pre[class*="language-"] {
+  border-radius: 5px;
+}

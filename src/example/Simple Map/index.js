@@ -1,10 +1,21 @@
 import "./index.css"
 import getDescription from "./description.js"
-import getCode from "./code.js"
+import { title, html_str, getCode } from "./code.js"
 
 document.querySelector('#app').innerHTML = `
-  <div id="map" class="map"></div>
+  <h4 id="title">${title}</h4>
+  ${html_str}
 `
+
+getDescription()
+getCode()
+
+setTimeout(() => {
+  Prism.highlightAll();
+})
+
+
+// *** js ***
 
 import Map from 'ol/Map.js';
 import OSM from 'ol/source/OSM.js';
@@ -23,8 +34,3 @@ const map = new Map({
     zoom: 2,
   }),
 });
-
-// ***
-
-getDescription()
-getCode()
