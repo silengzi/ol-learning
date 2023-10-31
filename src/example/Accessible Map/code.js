@@ -1,9 +1,9 @@
-const html_str = `
+const html_str = replaceStr(`
   <a class="skiplink" href="#map">Go to map</a>
   <div id="map" class="map" tabindex="0"></div>
   <button id="zoom-out">Zoom out</button>
   <button id="zoom-in">Zoom in</button>
-`
+`)
 
 const css_str = `
   .map {
@@ -61,7 +61,6 @@ const js_str = `
     const zoom = view.getZoom();
     view.setZoom(zoom + 1);
   };
-
 `
 
 const package_str = `
@@ -80,48 +79,16 @@ const package_str = `
   }
 `
 
-
 export default function getCode() {
   let text = `
-<pre class="language-markup"><code class="language-markup">\`${html_str}\`</code></pre>
-<pre><code class="language-css">${css_str}</code></pre>
-<pre><code class="language-js">${js_str}</code></pre>
-<pre><code class="language-json">${package_str}</code></pre>
+    <pre><code class="language-markup">${html_str.trim()}</code></pre>
+    <pre><code class="language-css">${"  " + css_str.trim()}</code></pre>
+    <pre><code class="language-js">${"  " + js_str.trim()}</code></pre>
+    <pre><code class="language-json">${"  " + package_str.trim()}</code></pre>
   `
   document.querySelector('#app').insertAdjacentHTML("beforeend", text)
 }
+
 setTimeout(() => {
   Prism.highlightAll();
 })
-
-
-
-// 全局引入prism.js和prism.css
-// copyCode方法也挂载到全局，通过接收参数来控制复制哪个(html、css、js、package.json)
-
-{/* <div class="wrap" style="width: 80%; margin: auto; position: relative;">
-<button onclick="copyCode()" style="position: absolute; right: 10px; top: 10px;">copy</button>
-<pre>
-    <code class="language-css">
-        function copyCode() {
-            const code = document.querySelector('pre code').textContent;
-            const textarea = document.createElement('textarea');
-            textarea.value = code;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-        }
-    </code>
-</pre>
-</div>
-
-function copyCode() {
-  const code = document.querySelector('pre code').textContent;
-  const textarea = document.createElement('textarea');
-  textarea.value = code;
-  document.body.appendChild(textarea);
-  textarea.select();
-  document.execCommand('copy');
-  document.body.removeChild(textarea);
-} */}

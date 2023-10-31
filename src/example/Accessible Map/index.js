@@ -42,6 +42,5 @@ document.getElementById('zoom-in').onclick = function () {
 };
 
 // ***
-
 getDescription()
 getCode()
