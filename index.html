@@ -13,7 +13,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js" integrity="sha512-/kVH1uXuObC0iYgxxCKY41JdWOkKOxorFVmip+YVifKsJ4Au/87EisD1wty7vxN2kAhnWh6Yc8o/dSAXj6Oz7A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <link rel="stylesheet" href="./src/assets/css/public.css">
-    <script src="./src/utils/index.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.1.0/ol.min.css" integrity="sha512-m1KzXSAktfv5h68DmZQoSyYh/GDrNeblGi7wFHwoQV0Hyg8vHlo5yh+D7HnGtFYYYc4dzltbPC3WqIv303WulQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.1.0/dist/ol.min.js" integrity="sha512-Lu3mKY4gbgocyIAil/7VhNwTSQuvpcLwDyaNz2yhCymG1GiV98pcRsfePdAK7EarOsKHtEMYjhrAt4brBu3HuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+      // 转换html代码块中的特殊字符，防止被浏览器编译
+      function replaceStr(strHTML) {
+          var strTem = "";
+          if (strHTML.length == 0) return "";
+          strTem = strHTML.replace(/&/g, "&amp;");
+          strTem = strTem.replace(/</g, "&lt;");
+          strTem = strTem.replace(/>/g, "&gt;");
+          strTem = strTem.replace(/ /g, "&nbsp;");
+          strTem = strTem.replace(/'/g, "&#39;");
+          strTem = strTem.replace(/"/g, "&quot;");
+          return strTem;
+      }
+      window.replaceStr = replaceStr
+    </script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">

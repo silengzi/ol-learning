@@ -17,19 +17,14 @@ setTimeout(() => {
 
 // *** js ***
 
-import Map from 'ol/Map.js';
-import OSM from 'ol/source/OSM.js';
-import TileLayer from 'ol/layer/Tile.js';
-import View from 'ol/View.js';
-
-const map = new Map({
+const map = new ol.Map({
   layers: [
-    new TileLayer({
-      source: new OSM(),
+    new ol.layer.Tile({
+      source: new ol.source.OSM(),
     }),
   ],
   target: 'map',
-  view: new View({
+  view: new ol.View({
     center: [0, 0],
     zoom: 2,
   }),

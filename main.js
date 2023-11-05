@@ -1,4 +1,4 @@
-import "ol/ol.css"
+// import "ol/ol.css"
 import { showExampleList } from "./src/utils/router.js"
 
 // showExampleDetails("Simple Map")
