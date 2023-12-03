@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/ol.min.css" integrity="sha512-bc9nJM5uKHN+wK7rtqMnzlGicwJBWR11SIDFJlYBe5fVOwjHGtXX8KMyYZ4sMgSL0CoUjo4GYgIBucOtqX/RUQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/dist/ol.min.js" integrity="sha512-+nvfloZUX7awRy1yslYBsicmHKh/qFW5w79+AiGiNcbewg0nBy7AS4G3+aK/Rm+eGPOKlO3tLuVphMxFXeKeOQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map" class="map"></div>
+    <button onclick="setCenter()">修改地图中心</button>
+    <button onclick="setZoom()">修改缩放</button>
+    <button onclick="setRotation()">修改旋转</button>
+</body>
+<script>
+    var map = new ol.Map ({
+        target: 'map'
+    })
+    var layerTile = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+        })
+    })
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([37.41, 8.82]),
+        zoom: 4
+    })
+    map.setView(view)
+    map.addLayer(layerTile)
+
+    function setCenter() {
+        console.log('原来中心点===', view.getCenter())
+        view.setCenter(ol.proj.fromLonLat([Math.random() * 130 + 20, Math.random() * 20 + 10]))
+        console.log('现在中心点===', view.getCenter())
+    }
+    function setZoom() {
+        console.log('原来：缩放===', view.getZoom())
+        console.log('原来：缩放最大===', view.getMaxZoom())
+        console.log('原来：缩放最小===', view.getMinZoom())
+        view.setMaxZoom(9)
+        view.setMinZoom(0)
+        view.setZoom(Math.ceil(Math.random() * 8))
+        console.log('现在：缩放===', view.getZoom())
+        console.log('现在：缩放最大===', view.getMaxZoom())
+        console.log('现在：缩放最小===', view.getMinZoom())
+    }
+    function setRotation() {
+        console.log('原来旋转===', view.getRotation())
+        // view.setRotation(Math.ceil(Math.random() * 180))
+        view.setRotation(90 * Math.PI / 180)
+        console.log('现在旋转===', view.getRotation())
+    }
+</script>
+</html>
