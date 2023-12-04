@@ -14,10 +14,13 @@
     </style>
 </head>
 <body>
-    <div id="map" class="map"></div>
     <button onclick="setCenter()">修改地图中心</button>
     <button onclick="setZoom()">修改缩放</button>
     <button onclick="setRotation()">修改旋转</button>
+    <div id="map" class="map"></div>
+    <!-- <button onclick="setCenter()">修改地图中心</button>
+    <button onclick="setZoom()">修改缩放</button>
+    <button onclick="setRotation()">修改旋转</button> -->
 </body>
 <script>
     var map = new ol.Map ({
@@ -53,8 +56,8 @@
     }
     function setRotation() {
         console.log('原来旋转===', view.getRotation())
-        // view.setRotation(Math.ceil(Math.random() * 180))
-        view.setRotation(90 * Math.PI / 180)
+        view.setRotation(Math.ceil(Math.random() * 180))
+        // view.setRotation(90 * Math.PI / 180)
         console.log('现在旋转===', view.getRotation())
     }
 </script>
