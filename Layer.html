@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Layer</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/ol.min.css"
+      integrity="sha512-bc9nJM5uKHN+wK7rtqMnzlGicwJBWR11SIDFJlYBe5fVOwjHGtXX8KMyYZ4sMgSL0CoUjo4GYgIBucOtqX/RUQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/dist/ol.min.js"
+      integrity="sha512-+nvfloZUX7awRy1yslYBsicmHKh/qFW5w79+AiGiNcbewg0nBy7AS4G3+aK/Rm+eGPOKlO3tLuVphMxFXeKeOQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <style>
+      .map {
+        height: 900px;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" class="map"></div>
+  </body>
+  <script>
+    var map = new ol.Map({
+      target: "map",
+    });
+    var layerTile = new ol.layer.Tile({
+      source: new ol.source.XYZ({
+        // url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+        url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+      }),
+    });
+    var view = new ol.View({
+      center: ol.proj.fromLonLat([37.41, 8.82]),
+      zoom: 0,
+    });
+    map.setView(view);
+    map.addLayer(layerTile);
+
+    // 坐标网格
+    var gra = new ol.layer.Graticule({
+      strokeStyle: new ol.style.Stroke({
+        color: "rgba(255, 120, 0, 0.9)",
+        width: 2,
+        lineDash: [0.5, 4],
+      }),
+      showLabels: true,
+      wrapX: false,
+    });
+    map.addLayer(gra);
+
+    // 热力图
+    var vector = new ol.layer.Heatmap({
+      source: new ol.source.Vector({
+        url: "https://openlayers.org/en/latest/examples/data/kml/2012_Earthquakes_Mag5.kml",
+        format: new ol.format.KML({
+          extractStyles: false,
+        }),
+      }),
+      blur: parseInt(5),
+      radius: parseInt(2), //半径
+    });
+    map.addLayer(vector);
+
+    // 矢量图层
+    var source = new ol.source.Vector({
+      url: "https://geo.datav.aliyun.com/areas_v3/bound/geojson?code=100000",
+      format: new ol.format.GeoJSON(),
+    });
+    vectorLayer = new ol.layer.Vector({
+      source: source,
+      style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "#ffcc33",
+          width: 2,
+        }),
+      }),
+    });
+    map.addLayer(vectorLayer);
+
+    //海量点
+    const vectorSource = new ol.source.Vector({
+      url: "https://openlayers.org/en/latest/examples/data/geojson/world-cities.geojson",
+      format: new ol.format.GeoJSON(),
+    });
+    let pointLayer = new ol.layer.WebGLPoints({
+      source: vectorSource,
+      style: {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["get", "population"],
+          40000,
+          4,
+          2000000,
+          14,
+        ],
+        "circle-fill-color": [
+          "match",
+          ["get", "hover"],
+          1,
+          "#ff3f3f",
+          "#006688",
+        ],
+        "circle-rotate-with-view": false,
+        "circle-displacement": [0, 0],
+        "circle-opacity": [
+          "interpolate",
+          ["linear"],
+          ["get", "population"],
+          40000,
+          0.6,
+          2000000,
+          0.92,
+        ],
+      },
+    });
+    map.addLayer(pointLayer);
+  </script>
+</html>
