@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controls</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/ol.min.css"
+        integrity="sha512-bc9nJM5uKHN+wK7rtqMnzlGicwJBWR11SIDFJlYBe5fVOwjHGtXX8KMyYZ4sMgSL0CoUjo4GYgIBucOtqX/RUQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/dist/ol.min.js"
+        integrity="sha512-+nvfloZUX7awRy1yslYBsicmHKh/qFW5w79+AiGiNcbewg0nBy7AS4G3+aK/Rm+eGPOKlO3tLuVphMxFXeKeOQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .map {
+            height: 500px;
+            width: 100%;
+        }
+
+        .ol-mouse-position {
+            top: auto;
+            bottom: 8px;
+        }
+
+        .ol-overviewmap .ol-overviewmap-map, .ol-overviewmap button {
+            position: absolute;
+            bottom: 25px;
+        }
+
+        .ol-overviewmap:not(.ol-collapsed) button {
+            bottom: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map" class="map"></div>
+</body>
+<script>
+    // 实例化地图
+    var map = new ol.Map({
+        target: 'map'
+    })
+    var layerTile = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            // url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    var cva_w = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            // url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([37.41, 8.82]),
+        zoom: 4
+    })
+    map.setView(view)
+    map.addLayer(layerTile)
+    map.addLayer(cva_w)
+
+    // 全屏控件
+    map.addControl(new ol.control.FullScreen())
+
+    // 显示鼠标所在位置坐标
+    var mousePositionControl = new ol.control.MousePosition({
+        projection: 'EPSG: 4326',
+        target: document.getElementById('mouse-position'),
+        undefinedHTML: ''
+    })
+    map.addControl(mousePositionControl)
+
+    // 比例尺、缩放、缩放刻度
+    map.addControl(new ol.control.ScaleLine())
+    map.addControl(new ol.control.Zoom())
+    map.addControl(new ol.control.ZoomSlider())
+
+    // 全局视图（鹰眼图）
+    var overview = new ol.control.OverviewMap({
+        collapsed: false,
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.XYZ({
+                    url: 'http://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetPurplishBlue/MapServer/tile/{z}/{y}/{x}'
+                })
+            })
+        ],
+        // collapsible: false,
+        // label: 'map'
+    })
+    map.addControl(overview)
+</script>
+
+</html>
