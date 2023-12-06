@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绘制省市区</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/ol.min.css"
+        integrity="sha512-bc9nJM5uKHN+wK7rtqMnzlGicwJBWR11SIDFJlYBe5fVOwjHGtXX8KMyYZ4sMgSL0CoUjo4GYgIBucOtqX/RUQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/dist/ol.min.js"
+        integrity="sha512-+nvfloZUX7awRy1yslYBsicmHKh/qFW5w79+AiGiNcbewg0nBy7AS4G3+aK/Rm+eGPOKlO3tLuVphMxFXeKeOQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map" class="map"></div>
+</body>
+<script>
+    var map = new ol.Map({
+        target: 'map'
+    })
+    var layerTile = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            // url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    var cva_w = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            // url: 'https://webrd01.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}'
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([130.41, 28.82]),
+        zoom: 1
+    })
+    map.setView(view)
+    map.addLayer(layerTile)
+    map.addLayer(cva_w)
+
+    var geo = [
+        { ...'https://geo.datav.aliyun.com/areas_v3/bound/370000.json' },
+        { ...'https://geo.datav.aliyun.com/areas_v3/bound/140000.json' }
+    ]
+    var areaLayer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            features: []
+        })
+    })
+    map.addLayer(areaLayer)
+    let areaFeature = []
+    geo.forEach((g) => {
+        console.log(g)
+        var areaFeatureTem = null
+        let lineData = g.features[0]
+        if (lineData.geometry.type == 'MultiPolygon') {
+            areaFeatureTem = new ol.Feature({
+                geometry: new ol.geom.MultiPolygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+            })
+        } else if (lineData.geometry.type == 'Polygon') {
+            areaFeatureTem = new ol.Feature({
+                geometry: new ol.geom.Polygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+            })
+        }
+        areaFeatureTem.setStyle(
+            new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#4e98f444'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: [71, 137, 227, 1],
+                    width: 3
+                })
+            })
+        )
+        areaFeature.push(areaFeatureTem)
+    })
+    areaLayer.getSource().addFeatures([...areaFeature])
+</script>
+
+</html>
