@@ -46,44 +46,58 @@
     map.addLayer(layerTile)
     map.addLayer(cva_w)
 
-    var geo = [
+    /* var geo = [
         { ...'https://geo.datav.aliyun.com/areas_v3/bound/370000.json' },
         { ...'https://geo.datav.aliyun.com/areas_v3/bound/140000.json' }
-    ]
-    var areaLayer = new ol.layer.Vector({
-        source: new ol.source.Vector({
-            features: []
-        })
-    })
-    map.addLayer(areaLayer)
-    let areaFeature = []
-    geo.forEach((g) => {
-        console.log(g)
-        var areaFeatureTem = null
-        let lineData = g.features[0]
-        if (lineData.geometry.type == 'MultiPolygon') {
-            areaFeatureTem = new ol.Feature({
-                geometry: new ol.geom.MultiPolygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
-            })
-        } else if (lineData.geometry.type == 'Polygon') {
-            areaFeatureTem = new ol.Feature({
-                geometry: new ol.geom.Polygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
-            })
-        }
-        areaFeatureTem.setStyle(
-            new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: '#4e98f444'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: [71, 137, 227, 1],
-                    width: 3
+    ] */
+    fetch("https://geo.datav.aliyun.com/areas_v3/bound/370000.json")
+        .then(response => response.json())
+        .then(json1 => {
+            console.log(json1)
+            fetch("https://geo.datav.aliyun.com/areas_v3/bound/140000.json")
+                .then(response => response.json())
+                .then(json2 => {
+                    console.log(json2)
+                    var geo = [json1, json2]
+                    // console.log(geo)
+                    var areaLayer = new ol.layer.Vector({
+                        source: new ol.source.Vector({
+                            features: []
+                        })
+                    })
+                    map.addLayer(areaLayer)
+                    let areaFeature = []
+                    geo.forEach((g) => {
+                        console.log(g)
+                        var areaFeatureTem = null
+                        let lineData = g.features[0]
+                        if (lineData.geometry.type == 'MultiPolygon') {
+                            areaFeatureTem = new ol.Feature({
+                                geometry: new ol.geom.MultiPolygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+                            })
+                        } else if (lineData.geometry.type == 'Polygon') {
+                            areaFeatureTem = new ol.Feature({
+                                geometry: new ol.geom.Polygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+                            })
+                        }
+                        areaFeatureTem.setStyle(
+                            new ol.style.Style({
+                                fill: new ol.style.Fill({
+                                    color: '#4e98f444'
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: [71, 137, 227, 1],
+                                    width: 3
+                                })
+                            })
+                        )
+                        areaFeature.push(areaFeatureTem)
+                    })
+                    areaLayer.getSource().addFeatures([...areaFeature])
                 })
+                .catch((err) => console.log('Request Failed', err))
             })
-        )
-        areaFeature.push(areaFeatureTem)
-    })
-    areaLayer.getSource().addFeatures([...areaFeature])
+        .catch((err) => console.log('Request Failed', err))
 </script>
 
 </html>
