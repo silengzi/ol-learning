@@ -68,16 +68,16 @@
                     map.addLayer(areaLayer)
                     let areaFeature = []
                     geo.forEach((g) => {
-                        console.log(g)
+                        // console.log(g)
                         var areaFeatureTem = null
                         let lineData = g.features[0]
                         if (lineData.geometry.type == 'MultiPolygon') {
                             areaFeatureTem = new ol.Feature({
-                                geometry: new ol.geom.MultiPolygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+                                geometry: new ol.geom.MultiPolygon(lineData.geometry.coordinates).transform('EPSG:4326', 'EPSG:3857')
                             })
                         } else if (lineData.geometry.type == 'Polygon') {
                             areaFeatureTem = new ol.Feature({
-                                geometry: new ol.geom.Polygon(lineData.geometry.coordinate).transform('EPSG: 4326', 'EPSG: 3857')
+                                geometry: new ol.geom.Polygon(lineData.geometry.coordinates).transform('EPSG:4326', 'EPSG:3857')
                             })
                         }
                         areaFeatureTem.setStyle(
