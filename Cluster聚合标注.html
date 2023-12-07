@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cluster聚合标注</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/ol.min.css"
+        integrity="sha512-bc9nJM5uKHN+wK7rtqMnzlGicwJBWR11SIDFJlYBe5fVOwjHGtXX8KMyYZ4sMgSL0CoUjo4GYgIBucOtqX/RUQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/openlayers/8.2.0/dist/ol.min.js"
+        integrity="sha512-+nvfloZUX7awRy1yslYBsicmHKh/qFW5w79+AiGiNcbewg0nBy7AS4G3+aK/Rm+eGPOKlO3tLuVphMxFXeKeOQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+        .map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="map" class="map"></div>
+</body>
+<script>
+    var map = new ol.Map({
+        target: 'map'
+    })
+    const layerTile = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=vec_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    const cva_w = new ol.layer.Tile({
+        source: new ol.source.XYZ({
+            url: "http://t{0-7}.tianditu.gov.cn/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=c3e13f43d5f380c070aaff0b2920fae8",
+        })
+    })
+    var view = new ol.View({
+        center: ol.proj.fromLonLat([0, 0]),
+        zoom: 1
+    })
+    map.setView(view)
+    map.addLayer(layerTile)
+    map.addLayer(cva_w)
+
+    const e = 4500000
+    const count = 20000
+    const features = new Array(count)
+    for (let i = 0; i < count; ++i) {
+        const coordinates = [2 * e * Math.random() - e, 2 * e * Math.random() - e]
+        // const coordinates = [2 * e * Math.random() - e * 0.5, 2 * e * Math.random() * 0.5 - e]
+        // const coordinates = [(2 * e * Math.random() - e) * 0.5, (2 * e * Math.random() - e) * 0.5]
+        features[i] = new ol.Feature(new ol.geom.Point(coordinates))
+    }
+    let source = new ol.source.Vector({
+        features: features
+    })
+    let clusterSource = new ol.source.Cluster({
+        source: source,
+        distance: 40,
+        // distance: 160
+    })
+    let layer = new ol.layer.Vector({
+        source: clusterSource,
+        style: clusterStyle.call(this)
+    })
+    map.addLayer(layer)
+    function clusterStyle() {
+        return (feature, solution) => {
+            const size = feature.get('features').length
+            let style = new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 15,
+                    stroke: new ol.style.Stroke({
+                        color: '#fff'
+                    }),
+                    fill: new ol.style.Fill({
+                        // color: '#3399cc'
+                        color: getColor(size)
+                    })
+                }),
+                text: new ol.style.Text({
+                    text: size.toString(),
+                    fill: new ol.style.Fill({
+                        color: '#fff'
+                    })
+                })
+            })
+            return style
+        }
+    }
+    function getColor(val) {
+        if(val < 100) {
+            return '#444693'
+        } else if (val >= 100 && val < 500) {
+            return '#f47920'
+        } else if (val >= 500) {
+            return '#ef5b9c'
+        }
+    }
+</script>
+</html>
